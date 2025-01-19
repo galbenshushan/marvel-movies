@@ -1,39 +1,75 @@
 import dotenv from "dotenv";
-
+import { emptyMovieResult } from "../consts/general";
+import { MovieType, MovieResponse, ActorMap } from "../types/general";
+import { getMarvelMovies } from "../controllers/tmbdController";
 dotenv.config();
 
+const API_KEY = process.env.API_KEY;
 const BASE_URL = process.env.BASE_URL;
-const accessToken = process.env.ACCESS_TOKEN;
 
-const fetchFromAPI = async (endpoint: string): Promise<any> => {
-  const url = `${BASE_URL}${endpoint}`;
-  const headers = {
-    Authorization: `Bearer ${accessToken}`,
-    "Content-Type": "application/json;charset=utf-8",
-  };
-
+export const getMovies = async (id: number): Promise<MovieResponse> => {
+  let allMovies: MovieType[] = [];
+  let currentPage = 1;
+  let totalPages = 1;
   try {
-    const response = await fetch(url, { headers });
-    if (!response.ok) {
-      throw new Error(
-        `API request failed with status ${response.status}: ${response.statusText}`
+    while (currentPage <= totalPages) {
+      const response = await fetch(
+        `${BASE_URL}/discover/movie?with_companies=${id}&page=${currentPage}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${API_KEY}`,
+            "Content-Type": "application/json",
+          },
+        }
       );
+
+      if (!response.ok) {
+        throw new Error("Error fetching data from TMDB");
+      }
+
+      const data = await response.json();
+
+      allMovies = allMovies.concat(data.results);
+      totalPages = data.total_pages;
+      currentPage++;
     }
-    return response.json();
+
+    return {
+      results: allMovies,
+      total_pages: totalPages,
+      total_results: allMovies.length,
+    };
   } catch (error) {
-    console.error(`Failed to fetch data from ${url}:`, error);
-    throw error;
+    console.error("Error fetching Marvel movies:", error);
+    return emptyMovieResult;
   }
 };
 
-export const getMovieById = async (movieId: number): Promise<any> => {
-  return fetchFromAPI(`/movie/${movieId}`);
+export const getActorCredits = async (movieId: number): Promise<any[]> => {
+  try {
+    const response = await fetch(
+      `${process.env.BASE_URL}/movie/${movieId}/credits`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${process.env.API_KEY}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    const creditsData = await response.json();
+
+    const actors = creditsData.cast.filter(
+      (actor: any) => actor.known_for_department === "Acting"
+    );
+
+    return actors;
+  } catch (error) {
+    console.error("Error fetching credits:", error);
+    return [];
+  }
 };
 
-export const getMovieCredits = async (movieId: number): Promise<any> => {
-  return fetchFromAPI(`/movie/${movieId}/credits`);
-};
 
-export const getPersonDetails = async (personId: number): Promise<any> => {
-  return fetchFromAPI(`/person/${personId}`);
-};
+

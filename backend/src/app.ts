@@ -1,28 +1,30 @@
 import express from "express";
-import dotenv from "dotenv";
-import cors from "cors";
-import http from "http";
-import connectToDatabase from "./services/dbService";
-
-dotenv.config();
+import { connectToDatabase } from "./services/dbService";
+import {
+  getActorsWithMultipleCharacters,
+  getCharactersWithMultipleActors,
+  getMoviesPerActor,
+} from "./controllers/tmbdController";
 
 const app = express();
-const server = http.createServer(app);
-const PORT = process.env.PORT || 3000;
+const port = 3000;
+
 const dbUri = process.env.DB_URI;
 
 if (!dbUri) {
   throw new Error("DB_URI is not defined in the environment variables");
 }
 
-connectToDatabase(dbUri);
+const start = async () => {
+  connectToDatabase(dbUri);
+};
 
-app.use(express.json());
-app.use(cors({ origin: process.env.FRONTEND_URL }));
-// app.use("/api", orderRoutes);
+start();
 
+app.get("/actorsWithMultipleCharacters", getActorsWithMultipleCharacters);
+app.get("/charactersWithMultipleActors", getCharactersWithMultipleActors);
+app.get("/moviesPerActor", getMoviesPerActor);
 
-
-server.listen(PORT, async () => {
-  console.log(`Listening on port ${PORT} `);
+app.listen(port, () => {
+  console.log(`Server is running on http://localhost:${port}`);
 });

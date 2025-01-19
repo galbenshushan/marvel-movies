@@ -13,31 +13,21 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const dotenv_1 = __importDefault(require("dotenv"));
-const cors_1 = __importDefault(require("cors"));
-// import orderRoutes from "./routes/orderRoute";
-const http_1 = __importDefault(require("http"));
-// import socketIo from "socket.io";
-const dbService_1 = __importDefault(require("./services/dbService"));
-dotenv_1.default.config();
+const dbService_1 = require("./services/dbService");
+const tmbdController_1 = require("./controllers/tmbdController");
 const app = (0, express_1.default)();
-const server = http_1.default.createServer(app);
-const PORT = process.env.PORT || 3000;
+const port = 3000;
 const dbUri = process.env.DB_URI;
 if (!dbUri) {
     throw new Error("DB_URI is not defined in the environment variables");
 }
-(0, dbService_1.default)(dbUri);
-// export const io = new socketIo.Server(server, {
-//   cors: {
-//     origin: process.env.FRONTEND_URL,
-//     methods: ["GET", "POST"],
-//   },
-// });
-app.use(express_1.default.json());
-app.use((0, cors_1.default)({ origin: process.env.FRONTEND_URL }));
-// app.use("/api", orderRoutes);
-// io.on("connection", socketHandler);
-server.listen(PORT, () => __awaiter(void 0, void 0, void 0, function* () {
-    console.log(`Listening on port ${PORT} `);
-}));
+const start = () => __awaiter(void 0, void 0, void 0, function* () {
+    (0, dbService_1.connectToDatabase)(dbUri);
+});
+start();
+app.get("/actorsWithMultipleCharacters", tmbdController_1.getActorsWithMultipleCharacters);
+app.get("/charactersWithMultipleActors", tmbdController_1.getCharactersWithMultipleActors);
+app.get("/moviesPerActor", tmbdController_1.getMoviesPerActor);
+app.listen(port, () => {
+    console.log(`Server is running on http://localhost:${port}`);
+});
