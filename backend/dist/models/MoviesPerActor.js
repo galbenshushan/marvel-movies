@@ -35,9 +35,12 @@ var __importStar = (this && this.__importStar) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importStar(require("mongoose"));
 const MoviesPerActorSchema = new mongoose_1.Schema({
-    moviesPerActorMap: {
-        type: Map,
-        of: [String],
+    actorName: {
+        type: String,
+        required: true,
+    },
+    movies: {
+        type: [String],
         required: true,
     },
 });

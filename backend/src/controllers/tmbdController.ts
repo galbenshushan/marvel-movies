@@ -49,25 +49,30 @@ export const getActorsWithMultipleCharacters = async (
 
 export const getMoviesPerActor = async (req: Request, res: Response) => {
   try {
-    const existingData = await MoviesPerActorModel.findOne();
+    const existingData = await MoviesPerActorModel.find();
 
-    if (existingData) {
+    if (existingData && existingData.length > 0) {
       res.json(existingData);
     } else {
-      const moviesPerActorMap = await getMoviesPerActorMap();
+      const moviesPerActorData = await getMoviesPerActorMap();
 
-      const newMoviesPerActorData = new MoviesPerActorModel({
-        moviesPerActorMap,
-      });
+      const newMoviesPerActorData = Object.entries(moviesPerActorData).map(
+        ([actorName, movies]) => {
+          return new MoviesPerActorModel({
+            actorName,
+            movies,
+          });
+        }
+      );
 
       try {
-        await newMoviesPerActorData.save();
+        await MoviesPerActorModel.insertMany(newMoviesPerActorData);
         console.log("Inserted movies per actor data into DB.");
       } catch (dbError) {
         console.error("Error saving movies per actor data:", dbError);
       }
 
-      res.json(moviesPerActorMap);
+      res.json(moviesPerActorData);
     }
   } catch (error) {
     console.error("Error fetching movies per actor:", error);
@@ -83,7 +88,7 @@ export const getCharactersWithMultipleActors = async (
     const existingData = await CharacterWithMultipleActorsModel.find();
     console.log(existingData);
 
-    if (existingData) {
+    if (existingData.length > 0) {
       res.json(existingData);
     } else {
       const filteredCharacterMap = await getCharactersWithMultipleActorsData();

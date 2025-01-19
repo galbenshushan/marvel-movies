@@ -53,23 +53,26 @@ const getActorsWithMultipleCharacters = (req, res) => __awaiter(void 0, void 0, 
 exports.getActorsWithMultipleCharacters = getActorsWithMultipleCharacters;
 const getMoviesPerActor = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const existingData = yield MoviesPerActor_1.default.findOne();
-        if (existingData) {
+        const existingData = yield MoviesPerActor_1.default.find();
+        if (existingData && existingData.length > 0) {
             res.json(existingData);
         }
         else {
-            const moviesPerActorMap = yield (0, actors_1.getMoviesPerActorMap)();
-            const newMoviesPerActorData = new MoviesPerActor_1.default({
-                moviesPerActorMap,
+            const moviesPerActorData = yield (0, actors_1.getMoviesPerActorMap)();
+            const newMoviesPerActorData = Object.entries(moviesPerActorData).map(([actorName, movies]) => {
+                return new MoviesPerActor_1.default({
+                    actorName,
+                    movies,
+                });
             });
             try {
-                yield newMoviesPerActorData.save();
+                yield MoviesPerActor_1.default.insertMany(newMoviesPerActorData);
                 console.log("Inserted movies per actor data into DB.");
             }
             catch (dbError) {
                 console.error("Error saving movies per actor data:", dbError);
             }
-            res.json(moviesPerActorMap);
+            res.json(moviesPerActorData);
         }
     }
     catch (error) {
@@ -82,7 +85,7 @@ const getCharactersWithMultipleActors = (req, res) => __awaiter(void 0, void 0, 
     try {
         const existingData = yield CharActors_1.default.find();
         console.log(existingData);
-        if (existingData) {
+        if (existingData.length > 0) {
             res.json(existingData);
         }
         else {

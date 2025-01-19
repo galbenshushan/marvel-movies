@@ -1,15 +1,17 @@
 import mongoose, { Schema, Document } from "mongoose";
 
 interface MoviesPerActor extends Document {
-  moviesPerActorMap: {
-    [actorName: string]: string[];
-  };
+  actorName: string;
+  movies: string[];
 }
 
 const MoviesPerActorSchema = new Schema<MoviesPerActor>({
-  moviesPerActorMap: {
-    type: Map,
-    of: [String],
+  actorName: {
+    type: String,
+    required: true,
+  },
+  movies: {
+    type: [String],
     required: true,
   },
 });
