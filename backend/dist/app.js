@@ -6,8 +6,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const dbService_1 = require("./services/dbService");
 const tmbdRoutes_1 = __importDefault(require("./routes/tmbdRoutes"));
+const cors_1 = __importDefault(require("cors"));
 const app = (0, express_1.default)();
 const port = 3000;
+app.use((0, cors_1.default)());
 const dbUri = process.env.DB_URI;
 if (!dbUri) {
     throw new Error("DB_URI is not defined in the environment variables");
