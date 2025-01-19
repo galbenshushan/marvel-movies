@@ -18,6 +18,9 @@ const general_1 = require("../consts/general");
 const Movie_1 = __importDefault(require("../models/Movie"));
 const dbService_1 = require("../services/dbService");
 const actors_1 = require("../utils/actors");
+const characters_1 = require("../utils/characters");
+const CharActors_1 = __importDefault(require("../models/CharActors"));
+const MoviesPerActor_1 = __importDefault(require("../models/MoviesPerActor"));
 const getMarvelMovies = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const storedMovies = yield Movie_1.default.find();
@@ -50,8 +53,24 @@ const getActorsWithMultipleCharacters = (req, res) => __awaiter(void 0, void 0, 
 exports.getActorsWithMultipleCharacters = getActorsWithMultipleCharacters;
 const getMoviesPerActor = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const moviesPerActorMap = yield (0, actors_1.getMoviesPerActorMap)();
-        res.json(moviesPerActorMap);
+        const existingData = yield MoviesPerActor_1.default.findOne();
+        if (existingData) {
+            res.json(existingData);
+        }
+        else {
+            const moviesPerActorMap = yield (0, actors_1.getMoviesPerActorMap)();
+            const newMoviesPerActorData = new MoviesPerActor_1.default({
+                moviesPerActorMap,
+            });
+            try {
+                yield newMoviesPerActorData.save();
+                console.log("Inserted movies per actor data into DB.");
+            }
+            catch (dbError) {
+                console.error("Error saving movies per actor data:", dbError);
+            }
+            res.json(moviesPerActorMap);
+        }
     }
     catch (error) {
         console.error("Error fetching movies per actor:", error);
@@ -61,36 +80,15 @@ const getMoviesPerActor = (req, res) => __awaiter(void 0, void 0, void 0, functi
 exports.getMoviesPerActor = getMoviesPerActor;
 const getCharactersWithMultipleActors = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const marvelMovies = yield (0, exports.getMarvelMovies)();
-        
-        const characterMap = {};
-        
-        for (const movie of marvelMovies) {
-            const actors = yield (0, tmdbService_1.getActorCredits)(movie.id);
-            
-            actors.forEach((actor) => {
-                const { name: actorName, character } = actor;
-                
-                if (!characterMap[character]) {
-                    characterMap[character] = [];
-                }
-                
-                characterMap[character].push({
-                    movieName: movie.title,
-                    actorName,
-                });
-            });
+        const existingData = yield CharActors_1.default.find();
+        console.log(existingData);
+        if (existingData) {
+            res.json(existingData);
         }
-        
-        const filteredCharacterMap = {};
-        Object.entries(characterMap).forEach(([characterName, entries]) => {
-            const uniqueActors = new Set(entries.map((entry) => entry.actorName));
-            if (uniqueActors.size > 1) {
-                filteredCharacterMap[characterName] = entries;
-            }
-        });
-        
-        res.json(filteredCharacterMap);
+        else {
+            const filteredCharacterMap = yield (0, characters_1.getCharactersWithMultipleActorsData)();
+            res.json(filteredCharacterMap);
+        }
     }
     catch (error) {
         console.error("Error fetching characters with multiple actors:", error);

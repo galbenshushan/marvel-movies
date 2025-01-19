@@ -48,7 +48,8 @@ const getMoviesPerActorMap = () => __awaiter(void 0, void 0, void 0, function* (
     for (const movie of marvelMovies) {
         const actors = yield (0, tmdbService_1.getActorCredits)(movie.id);
         actors.forEach((actor) => {
-            const { name: actorName } = actor;
+            let actorName = actor.name;
+            actorName = actorName.replace(/\./g, "_");
             if (!moviesPerActorMap[actorName]) {
                 moviesPerActorMap[actorName] = [];
             }

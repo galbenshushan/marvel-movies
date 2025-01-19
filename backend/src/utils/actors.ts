@@ -57,7 +57,9 @@ export const getMoviesPerActorMap = async (): Promise<MoviesPerActorMap> => {
     const actors = await getActorCredits(movie.id);
 
     actors.forEach((actor: any) => {
-      const { name: actorName } = actor;
+      let actorName = actor.name;
+
+      actorName = actorName.replace(/\./g, "_");
 
       if (!moviesPerActorMap[actorName]) {
         moviesPerActorMap[actorName] = [];

@@ -10,6 +10,8 @@ import {
   getMoviesPerActorMap,
 } from "../utils/actors";
 import { getCharactersWithMultipleActorsData } from "../utils/characters";
+import CharacterWithMultipleActorsModel from "../models/CharActors";
+import MoviesPerActorModel from "../models/MoviesPerActor";
 
 export const getMarvelMovies = async (): Promise<MovieType[]> => {
   try {
@@ -47,8 +49,26 @@ export const getActorsWithMultipleCharacters = async (
 
 export const getMoviesPerActor = async (req: Request, res: Response) => {
   try {
-    const moviesPerActorMap = await getMoviesPerActorMap();
-    res.json(moviesPerActorMap);
+    const existingData = await MoviesPerActorModel.findOne();
+
+    if (existingData) {
+      res.json(existingData);
+    } else {
+      const moviesPerActorMap = await getMoviesPerActorMap();
+
+      const newMoviesPerActorData = new MoviesPerActorModel({
+        moviesPerActorMap,
+      });
+
+      try {
+        await newMoviesPerActorData.save();
+        console.log("Inserted movies per actor data into DB.");
+      } catch (dbError) {
+        console.error("Error saving movies per actor data:", dbError);
+      }
+
+      res.json(moviesPerActorMap);
+    }
   } catch (error) {
     console.error("Error fetching movies per actor:", error);
     res.status(500).json({ error: "Internal Server Error" });
@@ -60,8 +80,15 @@ export const getCharactersWithMultipleActors = async (
   res: Response
 ) => {
   try {
-    const filteredCharacterMap = await getCharactersWithMultipleActorsData();
-    res.json(filteredCharacterMap);
+    const existingData = await CharacterWithMultipleActorsModel.find();
+    console.log(existingData);
+
+    if (existingData) {
+      res.json(existingData);
+    } else {
+      const filteredCharacterMap = await getCharactersWithMultipleActorsData();
+      res.json(filteredCharacterMap);
+    }
   } catch (error) {
     console.error("Error fetching characters with multiple actors:", error);
     res.status(500).json({ error: "Internal Server Error" });
