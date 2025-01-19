@@ -1,6 +1,6 @@
-import { getMarvelMovies } from "../controllers/tmbdController";
 import { getActorCredits } from "../services/tmdbService";
 import { MoviesPerActorMap } from "../types/general";
+import { getMarvelMovies } from "./movies";
 
 interface ActorMap {
   [actorName: string]: { movieName: string; characterName: string }[];

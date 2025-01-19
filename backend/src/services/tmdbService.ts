@@ -1,7 +1,6 @@
 import dotenv from "dotenv";
 import { emptyMovieResult } from "../consts/general";
 import { MovieType, MovieResponse, ActorMap } from "../types/general";
-import { getMarvelMovies } from "../controllers/tmbdController";
 dotenv.config();
 
 const API_KEY = process.env.API_KEY;

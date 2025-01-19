@@ -13,12 +13,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getCharactersWithMultipleActorsData = void 0;
-const tmbdController_1 = require("../controllers/tmbdController");
 const CharacterWithMultipleActors_1 = __importDefault(require("../models/CharacterWithMultipleActors"));
 const tmdbService_1 = require("../services/tmdbService");
+const movies_1 = require("./movies");
 const getCharactersWithMultipleActorsData = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const marvelMovies = yield (0, tmbdController_1.getMarvelMovies)();
+        const marvelMovies = yield (0, movies_1.getMarvelMovies)();
         const characterMap = {};
         for (const movie of marvelMovies) {
             const actors = yield (0, tmdbService_1.getActorCredits)(movie.id);

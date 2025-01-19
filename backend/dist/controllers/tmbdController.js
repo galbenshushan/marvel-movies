@@ -49,13 +49,10 @@ const getActorsWithMultipleCharacters = (req, res) => __awaiter(void 0, void 0, 
         else {
             const actorMap = yield (0, actors_1.getActorMap)();
             const filteredActorMap = (0, actors_1.filterActorsWithMultipleCharacters)(actorMap);
-            // Ensure 'characters' is an array of strings, not objects
             const newActorsWithMultipleCharactersData = Object.entries(filteredActorMap).map(([actorName, characters]) => {
-                // Format characters to be an array of strings (character names or custom string)
                 const formattedCharacters = characters.map((character) => typeof character === "object" && character.characterName
-                    ? character.characterName // Use the character name as the string
-                    : JSON.stringify(character) // Or handle it in another way
-                );
+                    ? character.characterName
+                    : JSON.stringify(character));
                 return new ActorsWithMultipleCharacters_1.default({
                     actorName,
                     characters: formattedCharacters,
@@ -110,7 +107,6 @@ exports.getMoviesPerActor = getMoviesPerActor;
 const getCharactersWithMultipleActors = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const existingData = yield CharacterWithMultipleActors_1.default.find();
-        console.log(existingData);
         if (existingData.length > 0) {
             res.json(existingData);
         }

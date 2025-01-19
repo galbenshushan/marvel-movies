@@ -1,7 +1,7 @@
-import { getMarvelMovies } from "../controllers/tmbdController";
 import CharacterWithMultipleActorsModel from "../models/CharacterWithMultipleActors";
 import { getActorCredits } from "../services/tmdbService";
 import { CharacterWithMultipleActorsMap } from "../types/general";
+import { getMarvelMovies } from "./movies";
 
 export const getCharactersWithMultipleActorsData = async (): Promise<any> => {
   try {

@@ -10,10 +10,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getMoviesPerActorMap = exports.filterActorsWithMultipleCharacters = exports.getActorMap = void 0;
-const tmbdController_1 = require("../controllers/tmbdController");
 const tmdbService_1 = require("../services/tmdbService");
+const movies_1 = require("./movies");
 const getActorMap = () => __awaiter(void 0, void 0, void 0, function* () {
-    const marvelMovies = yield (0, tmbdController_1.getMarvelMovies)();
+    const marvelMovies = yield (0, movies_1.getMarvelMovies)();
     const actorMap = {};
     for (const movie of marvelMovies) {
         const actors = yield (0, tmdbService_1.getActorCredits)(movie.id);
@@ -43,7 +43,7 @@ const filterActorsWithMultipleCharacters = (actorMap) => {
 };
 exports.filterActorsWithMultipleCharacters = filterActorsWithMultipleCharacters;
 const getMoviesPerActorMap = () => __awaiter(void 0, void 0, void 0, function* () {
-    const marvelMovies = yield (0, tmbdController_1.getMarvelMovies)();
+    const marvelMovies = yield (0, movies_1.getMarvelMovies)();
     const moviesPerActorMap = {};
     for (const movie of marvelMovies) {
         const actors = yield (0, tmdbService_1.getActorCredits)(movie.id);
