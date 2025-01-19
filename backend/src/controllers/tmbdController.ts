@@ -10,8 +10,9 @@ import {
   getMoviesPerActorMap,
 } from "../utils/actors";
 import { getCharactersWithMultipleActorsData } from "../utils/characters";
-import CharacterWithMultipleActorsModel from "../models/CharActors";
+import CharacterWithMultipleActorsModel from "../models/CharacterWithMultipleActors";
 import MoviesPerActorModel from "../models/MoviesPerActor";
+import ActorsWithMultipleCharactersModel from "../models/ActorsWithMultipleCharacters";
 
 export const getMarvelMovies = async (): Promise<MovieType[]> => {
   try {
@@ -38,11 +39,45 @@ export const getActorsWithMultipleCharacters = async (
   res: Response
 ) => {
   try {
-    const actorMap = await getActorMap();
-    const filteredActorMap = filterActorsWithMultipleCharacters(actorMap);
-    res.json(filteredActorMap);
+    const existingData = await ActorsWithMultipleCharactersModel.find();
+
+    if (existingData && existingData.length > 0) {
+      res.json(existingData);
+    } else {
+      const actorMap = await getActorMap();
+      const filteredActorMap = filterActorsWithMultipleCharacters(actorMap);
+
+      const newActorsWithMultipleCharactersData = Object.entries(
+        filteredActorMap
+      ).map(([actorName, characters]) => {
+        const formattedCharacters = characters.map((character: any) =>
+          typeof character === "object" && character.characterName
+            ? character.characterName
+            : JSON.stringify(character)
+        );
+
+        return new ActorsWithMultipleCharactersModel({
+          actorName,
+          characters: formattedCharacters,
+        });
+      });
+
+      try {
+        await ActorsWithMultipleCharactersModel.insertMany(
+          newActorsWithMultipleCharactersData
+        );
+        console.log("Inserted actors with multiple characters data into DB.");
+      } catch (dbError) {
+        console.error(
+          "Error saving actors with multiple characters data:",
+          dbError
+        );
+      }
+
+      res.json(filteredActorMap);
+    }
   } catch (error) {
-    console.error("Error fetching characters with multiple actors:", error);
+    console.error("Error fetching actors with multiple characters:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
@@ -86,7 +121,6 @@ export const getCharactersWithMultipleActors = async (
 ) => {
   try {
     const existingData = await CharacterWithMultipleActorsModel.find();
-    console.log(existingData);
 
     if (existingData.length > 0) {
       res.json(existingData);

@@ -14,7 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getCharactersWithMultipleActorsData = void 0;
 const tmbdController_1 = require("../controllers/tmbdController");
-const CharActors_1 = __importDefault(require("../models/CharActors"));
+const CharacterWithMultipleActors_1 = __importDefault(require("../models/CharacterWithMultipleActors"));
 const tmdbService_1 = require("../services/tmdbService");
 const getCharactersWithMultipleActorsData = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -45,14 +45,14 @@ const getCharactersWithMultipleActorsData = () => __awaiter(void 0, void 0, void
                 console.warn(`Skipping character with empty or invalid name: ${characterName}`);
                 return;
             }
-            const existingData = yield CharActors_1.default.findOne({
+            const existingData = yield CharacterWithMultipleActors_1.default.findOne({
                 characterName,
             });
             if (existingData) {
                 console.log(`Character ${characterName} already exists, skipping insert.`);
             }
             else {
-                const newCharacterData = new CharActors_1.default({
+                const newCharacterData = new CharacterWithMultipleActors_1.default({
                     characterName,
                     entries,
                 });

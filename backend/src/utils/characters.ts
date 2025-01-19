@@ -1,5 +1,5 @@
 import { getMarvelMovies } from "../controllers/tmbdController";
-import CharacterWithMultipleActorsModel from "../models/CharActors";
+import CharacterWithMultipleActorsModel from "../models/CharacterWithMultipleActors";
 import { getActorCredits } from "../services/tmdbService";
 import { CharacterWithMultipleActorsMap } from "../types/general";
 

@@ -19,8 +19,9 @@ const Movie_1 = __importDefault(require("../models/Movie"));
 const dbService_1 = require("../services/dbService");
 const actors_1 = require("../utils/actors");
 const characters_1 = require("../utils/characters");
-const CharActors_1 = __importDefault(require("../models/CharActors"));
+const CharacterWithMultipleActors_1 = __importDefault(require("../models/CharacterWithMultipleActors"));
 const MoviesPerActor_1 = __importDefault(require("../models/MoviesPerActor"));
+const ActorsWithMultipleCharacters_1 = __importDefault(require("../models/ActorsWithMultipleCharacters"));
 const getMarvelMovies = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const storedMovies = yield Movie_1.default.find();
@@ -41,12 +42,37 @@ const getMarvelMovies = () => __awaiter(void 0, void 0, void 0, function* () {
 exports.getMarvelMovies = getMarvelMovies;
 const getActorsWithMultipleCharacters = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const actorMap = yield (0, actors_1.getActorMap)();
-        const filteredActorMap = (0, actors_1.filterActorsWithMultipleCharacters)(actorMap);
-        res.json(filteredActorMap);
+        const existingData = yield ActorsWithMultipleCharacters_1.default.find();
+        if (existingData && existingData.length > 0) {
+            res.json(existingData);
+        }
+        else {
+            const actorMap = yield (0, actors_1.getActorMap)();
+            const filteredActorMap = (0, actors_1.filterActorsWithMultipleCharacters)(actorMap);
+            // Ensure 'characters' is an array of strings, not objects
+            const newActorsWithMultipleCharactersData = Object.entries(filteredActorMap).map(([actorName, characters]) => {
+                // Format characters to be an array of strings (character names or custom string)
+                const formattedCharacters = characters.map((character) => typeof character === "object" && character.characterName
+                    ? character.characterName // Use the character name as the string
+                    : JSON.stringify(character) // Or handle it in another way
+                );
+                return new ActorsWithMultipleCharacters_1.default({
+                    actorName,
+                    characters: formattedCharacters,
+                });
+            });
+            try {
+                yield ActorsWithMultipleCharacters_1.default.insertMany(newActorsWithMultipleCharactersData);
+                console.log("Inserted actors with multiple characters data into DB.");
+            }
+            catch (dbError) {
+                console.error("Error saving actors with multiple characters data:", dbError);
+            }
+            res.json(filteredActorMap);
+        }
     }
     catch (error) {
-        console.error("Error fetching characters with multiple actors:", error);
+        console.error("Error fetching actors with multiple characters:", error);
         res.status(500).json({ error: "Internal Server Error" });
     }
 });
@@ -83,7 +109,7 @@ const getMoviesPerActor = (req, res) => __awaiter(void 0, void 0, void 0, functi
 exports.getMoviesPerActor = getMoviesPerActor;
 const getCharactersWithMultipleActors = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const existingData = yield CharActors_1.default.find();
+        const existingData = yield CharacterWithMultipleActors_1.default.find();
         console.log(existingData);
         if (existingData.length > 0) {
             res.json(existingData);
