@@ -55,3 +55,18 @@ export const getMoviesPerActor = async (
     return { actor: { id: "", name: "" }, movies: [] };
   }
 };
+
+export const getMovies = async (): Promise<any[]> => {
+  try {
+    const response = await fetch(
+      `${import.meta.env.REACT_APP_SERVER_URL || serverUrl}/marvel/movies`
+    );
+    if (!response.ok) {
+      throw new Error("Failed to fetch movies for actor");
+    }
+    return await response.json();
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+};

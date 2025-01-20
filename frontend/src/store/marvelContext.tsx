@@ -2,6 +2,7 @@ import React, { createContext, ReactNode, useState } from "react";
 import {
   getActorsWithMultipleCharacters,
   getCharactersWithMultipleActors,
+  getMovies,
   getMoviesPerActor,
 } from "../services/marvelService";
 import {
@@ -20,7 +21,9 @@ export const MarvelProvider: React.FC<{ children: ReactNode }> = ({
 }) => {
   const [actors, setActors] = useState<Actor[]>([]);
   const [characters, setCharacters] = useState<Character[]>([]);
-  const [movies, setMovies] = useState<MoviesPerActorResponse | null>(null);
+  const [moviesPerActor, setMoviesPerActor] =
+    useState<MoviesPerActorResponse | null>(null);
+  const [movies, setMovies] = useState<any>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -60,6 +63,21 @@ export const MarvelProvider: React.FC<{ children: ReactNode }> = ({
     setError(null);
     try {
       const data = await getMoviesPerActor(actorId);
+      setMoviesPerActor(data);
+    } catch (err) {
+      setError("Failed to fetch movies for actor");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchMovies = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const data = await getMovies();
+      console.log(data);
+
       setMovies(data);
     } catch (err) {
       setError("Failed to fetch movies for actor");
@@ -71,14 +89,16 @@ export const MarvelProvider: React.FC<{ children: ReactNode }> = ({
   return (
     <MarvelContext.Provider
       value={{
+        movies,
         actors,
         characters,
-        movies,
+        moviesPerActor,
         loading,
         error,
         fetchActors,
         fetchCharacters,
         fetchMoviesForActor,
+        fetchMovies,
       }}
     >
       {children}
