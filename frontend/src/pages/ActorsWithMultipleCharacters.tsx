@@ -1,9 +1,9 @@
 import { v4 as uuidv4 } from "uuid";
-import { useEffect } from "react";
 import { useMarvel } from "../hooks/useMarvel";
 import ActorAccordion from "../components/ActorAccordion";
 import { Typography } from "@mui/material";
 import styled from "styled-components";
+import useMountEffect from "../hooks/useMountEffect";
 
 const Container = styled.div`
   padding: 20px;
@@ -21,7 +21,7 @@ interface ActorsWithMultipleCharactersType {
 const ActorsWithMultipleCharacters = () => {
   const { fetchActors, actorsWithMultipleChars } = useMarvel();
 
-  useEffect(() => {
+  useMountEffect(() => {
     fetchActors();
   }, []);
 
