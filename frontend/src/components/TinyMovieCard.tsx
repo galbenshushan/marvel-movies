@@ -45,7 +45,9 @@ interface TinyMovieCardProps {
 }
 
 const TinyMovieCard: React.FC<TinyMovieCardProps> = ({ movie }) => {
-  const formattedDate = formatDateToText(movie.release_date);
+  const formattedDate = movie.release_date
+    ? formatDateToText(movie.release_date)
+    : "N/A";
 
   return (
     <TinyCardContainer>
