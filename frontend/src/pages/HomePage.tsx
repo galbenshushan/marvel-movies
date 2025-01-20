@@ -2,6 +2,8 @@ import { useEffect } from "react";
 import { useMarvel } from "../hooks/useMarvel";
 import MovieCard from "../components/MovieCard";
 import styled from "styled-components";
+import { MovieType } from "../types/api";
+import { v4 as uuidv4 } from "uuid";
 
 const GridContainer = styled.div`
   display: flex;
@@ -33,9 +35,9 @@ const HomePage = () => {
     <>
       <Banner />
       <GridContainer>
-        {movies.map((movie) => (
-          <MovieCard key={movie.id} movie={movie} />
-        ))}
+        {movies.map((movie: MovieType) =>
+          movies ? <MovieCard key={uuidv4()} movie={movie} /> : null
+        )}
       </GridContainer>
     </>
   );
