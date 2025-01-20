@@ -54,7 +54,7 @@ const GenreContainer = styled.div`
 
 const GenreChip = styled.span`
   padding: 4px 8px;
-  background-color: #f46d24;
+  background-color:rgb(244, 36, 36);
   border-radius: 12px;
   font-size: 12px;
   color: #ffffff;
