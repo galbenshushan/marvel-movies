@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { MovieType } from "../types/api";
 import { formatDateToText } from "../utils/Date";
 import { getGenreName } from "../utils/Genres";
+import Tooltip from "@mui/material/Tooltip"; // Import Tooltip from MUI
 
 const CardContainer = styled.div`
   background-color: #1e1e1e;
@@ -54,7 +55,7 @@ const GenreContainer = styled.div`
 
 const GenreChip = styled.span`
   padding: 4px 8px;
-  background-color:rgb(244, 36, 36);
+  background-color: rgb(244, 36, 36);
   border-radius: 12px;
   font-size: 12px;
   color: #ffffff;
@@ -70,6 +71,12 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
   const formattedDate = movie.release_date
     ? formatDateToText(movie.release_date)
     : "N/A";
+
+  const truncatedOverview =
+    movie.overview.length > 100
+      ? `${movie.overview.slice(0, 100)}...`
+      : movie.overview;
+
   return (
     <CardContainer>
       <CardImage
@@ -79,11 +86,10 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
       />
       <CardContent>
         <CardTitle>{movie.title}</CardTitle>
-        <CardText>
-          {movie.overview.length > 100
-            ? `${movie.overview.slice(0, 100)}...`
-            : movie.overview}
-        </CardText>
+        <Tooltip title={movie.overview} arrow>
+          <CardText>{truncatedOverview}</CardText>
+        </Tooltip>
+
         <MetaText>Release Date: {formattedDate}</MetaText>
         <MetaText>Popularity: {movie.popularity}</MetaText>
         <MetaText>Rating: {movie.vote_average}</MetaText>
