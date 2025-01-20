@@ -3,7 +3,7 @@ import { getActorCredits } from "../services/tmdbService";
 import { CharacterWithMultipleActorsMap } from "../types/general";
 import { getMarvelMovies } from "./movies";
 
-export const getCharactersWithMultipleActorsData = async (): Promise<any> => {
+export const getCharactersWithMultipleActorsData = async (): Promise<any[]> => {
   try {
     const marvelMovies = await getMarvelMovies();
 
@@ -26,26 +26,24 @@ export const getCharactersWithMultipleActorsData = async (): Promise<any> => {
       });
     }
 
-    const filteredCharacterMap: CharacterWithMultipleActorsMap = {};
+    const filteredCharacters: { characterName: string; entries: any[] }[] = [];
 
     Object.entries(characterMap).forEach(([characterName, entries]) => {
       const uniqueActors = new Set(entries.map((entry) => entry.actorName));
 
-      if (uniqueActors.size > 1) {
-        filteredCharacterMap[characterName] = entries;
+      if (
+        uniqueActors.size > 1 &&
+        characterName &&
+        characterName.trim() !== ""
+      ) {
+        filteredCharacters.push({
+          characterName,
+          entries,
+        });
       }
     });
 
-    for (const [characterName, entries] of Object.entries(
-      filteredCharacterMap
-    )) {
-      if (!characterName || characterName.trim() === "") {
-        console.warn(
-          `Skipping character with empty or invalid name: ${characterName}`
-        );
-        return;
-      }
-
+    for (const { characterName, entries } of filteredCharacters) {
       const existingData = await CharacterWithMultipleActorsModel.findOne({
         characterName,
       });
@@ -69,7 +67,7 @@ export const getCharactersWithMultipleActorsData = async (): Promise<any> => {
       }
     }
 
-    return filteredCharacterMap;
+    return filteredCharacters;
   } catch (error) {
     console.error("Error fetching characters with multiple actors:", error);
     throw new Error("Internal Server Error");

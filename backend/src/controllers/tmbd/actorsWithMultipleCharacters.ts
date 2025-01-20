@@ -10,7 +10,14 @@ export const getActorsWithMultipleCharacters = async (
   res: Response
 ) => {
   try {
-    const existingData = await ActorsWithMultipleCharactersModel.find();
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 100;
+
+    const skip = (page - 1) * limit;
+
+    const existingData = await ActorsWithMultipleCharactersModel.find()
+      .skip(skip)
+      .limit(limit);
 
     if (existingData && existingData.length > 0) {
       res.json(existingData);
@@ -20,18 +27,20 @@ export const getActorsWithMultipleCharacters = async (
 
       const newActorsWithMultipleCharactersData = Object.entries(
         filteredActorMap
-      ).map(([actorName, characters]) => {
-        const formattedCharacters = characters.map((character: any) =>
-          typeof character === "object" && character.characterName
-            ? character.characterName
-            : JSON.stringify(character)
-        );
+      )
+        .slice(skip, skip + limit)
+        .map(([actorName, characters]) => {
+          const formattedCharacters = characters.map((character: any) =>
+            typeof character === "object" && character.characterName
+              ? character.characterName
+              : JSON.stringify(character)
+          );
 
-        return new ActorsWithMultipleCharactersModel({
-          actorName,
-          characters: formattedCharacters,
+          return new ActorsWithMultipleCharactersModel({
+            actorName,
+            characters: formattedCharacters,
+          });
         });
-      });
 
       try {
         await ActorsWithMultipleCharactersModel.insertMany(
@@ -45,7 +54,7 @@ export const getActorsWithMultipleCharacters = async (
         );
       }
 
-      res.json(filteredActorMap);
+      res.json(newActorsWithMultipleCharactersData);
     }
   } catch (error) {
     console.error("Error fetching actors with multiple characters:", error);

@@ -14,9 +14,7 @@ export const getMoviesPerActor = async (req: Request, res: Response) => {
       .limit(limit);
 
     if (moviesPerActorData && moviesPerActorData.length > 0) {
-
-      const reversedData = moviesPerActorData.reverse();
-      res.json(reversedData);
+      res.json(moviesPerActorData);
     } else {
       const newMoviesPerActorData = await getMoviesPerActorMap();
 
@@ -29,16 +27,14 @@ export const getMoviesPerActor = async (req: Request, res: Response) => {
           });
         });
 
-      const reversedSelectedData = selectedMoviesPerActorData.reverse();
-
       try {
-        await MoviesPerActorModel.insertMany(reversedSelectedData);
+        await MoviesPerActorModel.insertMany(selectedMoviesPerActorData);
         console.log("Inserted new movies per actor data into DB.");
       } catch (dbError) {
         console.error("Error saving movies per actor data:", dbError);
       }
 
-      res.json(reversedSelectedData);
+      res.json(selectedMoviesPerActorData);
     }
   } catch (error) {
     console.error("Error fetching movies per actor:", error);

@@ -28,7 +28,8 @@ const getCharactersWithMultipleActors = (req, res) => __awaiter(void 0, void 0, 
         }
         else {
             const filteredCharacterMap = yield (0, characters_1.getCharactersWithMultipleActorsData)();
-            const validCharacterData = filteredCharacterMap === null || filteredCharacterMap === void 0 ? void 0 : filteredCharacterMap.filter((character) => character.characterName);
+            console.log(filteredCharacterMap.length);
+            const validCharacterData = filteredCharacterMap.filter((character) => character.characterName);
             if ((validCharacterData === null || validCharacterData === void 0 ? void 0 : validCharacterData.length) > 0) {
                 try {
                     yield CharacterWithMultipleActors_1.default.insertMany(validCharacterData);

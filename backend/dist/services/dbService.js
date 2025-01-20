@@ -42,8 +42,7 @@ const insertMoviesToDb = (movies) => __awaiter(void 0, void 0, void 0, function*
                     poster_path: movie.poster_path || "",
                     genre_ids: movie.genre_ids || [],
                 },
-            }, { upsert: true } // Insert if not found
-            );
+            }, { upsert: true });
         }));
         yield Promise.all(moviePromises);
         console.log("Movies inserted/updated in the database");
