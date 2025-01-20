@@ -28,7 +28,9 @@ const HomePage = () => {
   const { fetchMovies, movies } = useMarvel();
 
   useMountEffect(() => {
-    fetchMovies();
+    if (movies.length === 0) {
+      fetchMovies();
+    }
   }, []);
 
   return (

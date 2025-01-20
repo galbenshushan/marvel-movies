@@ -12,12 +12,16 @@ const Container = styled.div`
   gap: 10px;
 `;
 const MoviesPerActor = () => {
-  const { moviesPerActor, fetchMoviesPerActor, loading, fetchMovies } =
+  const { moviesPerActor, fetchMoviesPerActor, loading, fetchMovies, movies } =
     useMarvel();
 
   useMountEffect(() => {
-    fetchMovies();
-    fetchMoviesPerActor();
+    if (movies.length === 0) {
+      fetchMovies();
+    }
+    if (moviesPerActor.length === 0) {
+      fetchMoviesPerActor();
+    }
   }, []);
 
   const handleScroll = () => {

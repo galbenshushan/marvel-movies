@@ -14,10 +14,15 @@ const Container = styled.div`
 `;
 
 const CharactersWithMultipleActors = () => {
-  const { fetchCharacters, characters } = useMarvel();
+  const { fetchCharacters, characters, movies, fetchMovies } = useMarvel();
 
   useMountEffect(() => {
-    fetchCharacters();
+    if (movies.length === 0) {
+      fetchMovies();
+    }
+    if (characters.length === 0) {
+      fetchCharacters();
+    }
   }, []);
 
   return (

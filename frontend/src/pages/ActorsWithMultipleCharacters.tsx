@@ -19,10 +19,16 @@ interface ActorsWithMultipleCharactersType {
 }
 
 const ActorsWithMultipleCharacters = () => {
-  const { fetchActors, actorsWithMultipleChars } = useMarvel();
+  const { fetchActors, actorsWithMultipleChars, movies, fetchMovies } =
+    useMarvel();
 
   useMountEffect(() => {
-    fetchActors();
+    if (movies.length === 0) {
+      fetchMovies();
+    }
+    if (actorsWithMultipleChars.length === 0) {
+      fetchActors();
+    }
   }, []);
 
   return (
