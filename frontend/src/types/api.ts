@@ -1,7 +1,7 @@
 export interface MarvelContextType {
-  actors: Actor[];
-  characters: Character[];
-  moviesPerActor: any[];
+  actorsWithMultipleChars: ActorsWithMultipleCharactersType[];
+  characters: CharactersWithMultipleActorsType[];
+  moviesPerActor: MoviesPerActorType[];
   movies: any[];
   loading: boolean;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
@@ -12,31 +12,37 @@ export interface MarvelContextType {
   fetchMovies: () => Promise<void>;
 }
 
-export interface Actor {
-  id: string;
-  name: string;
+export interface CharactersWithMultipleActorsType {
+  _id: string;
+  characterName: string;
+  entries: CharacterEntry[];
 }
 
-
-export interface Character {
-  id: string;
-  name: string;
+export interface CharacterEntry {
+  _id: string;
+  actorName: string;
+  movieName: string;
 }
-
 export interface Movie {
   id: string;
   title: string;
   year: number;
 }
 
-export interface IMoviesPerActor {
+export interface MoviesPerActorType {
   _id: string;
   actorName: string;
   movies: string[];
 }
 
 export interface MoviesPerActorType {
-  actor: IMoviesPerActor;
+  actor: MoviesPerActorType;
+}
+
+export interface ActorsWithMultipleCharactersType {
+  _id: string;
+  actorName: string;
+  characters: string[];
 }
 
 export interface MovieType {
