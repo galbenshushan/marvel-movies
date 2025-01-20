@@ -1,12 +1,17 @@
-import { Actor, Character } from "../types/api";
+import {
+  ActorsWithMultipleCharactersType,
+  CharactersWithMultipleActorsType,
+} from "../types/api";
 import { serverUrl } from "../consts/api";
 
-export const getActorsWithMultipleCharacters = async (): Promise<Actor[]> => {
+export const getActorsWithMultipleCharacters = async (
+  page: number
+): Promise<ActorsWithMultipleCharactersType[]> => {
   try {
     const response = await fetch(
       `${
         import.meta.env.REACT_APP_SERVER_URL || serverUrl
-      }/marvel/actorsWithMultipleCharacters`
+      }/marvel/actorsWithMultipleCharacters?page=${page}&limit=${100}`
     );
     if (!response.ok) {
       throw new Error("Failed to fetch actors with multiple characters");
@@ -18,14 +23,14 @@ export const getActorsWithMultipleCharacters = async (): Promise<Actor[]> => {
   }
 };
 
-export const getCharactersWithMultipleActors = async (): Promise<
-  Character[]
-> => {
+export const getCharactersWithMultipleActors = async (
+  page: number
+): Promise<CharactersWithMultipleActorsType[]> => {
   try {
     const response = await fetch(
       `${
         import.meta.env.REACT_APP_SERVER_URL || serverUrl
-      }/marvel/charactersWithMultipleActors`
+      }/marvel/charactersWithMultipleActors?page=${page}&limit=${100}`
     );
     if (!response.ok) {
       throw new Error("Failed to fetch characters with multiple actors");
@@ -53,7 +58,6 @@ export const getMoviesPerActor = async (page: number): Promise<any[]> => {
     return [];
   }
 };
-
 
 export const getMovies = async (): Promise<any[]> => {
   try {

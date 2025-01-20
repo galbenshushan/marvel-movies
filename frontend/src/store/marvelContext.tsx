@@ -5,7 +5,11 @@ import {
   getMovies,
   getMoviesPerActor,
 } from "../services/marvelService";
-import { Actor, Character, MarvelContextType } from "../types/api";
+import {
+  ActorsWithMultipleCharactersType,
+  CharactersWithMultipleActorsType,
+  MarvelContextType,
+} from "../types/api";
 
 export const MarvelContext = createContext<MarvelContextType | undefined>(
   undefined
@@ -14,21 +18,29 @@ export const MarvelContext = createContext<MarvelContextType | undefined>(
 export const MarvelProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const [actors, setActors] = useState<Actor[]>([]);
-  const [characters, setCharacters] = useState<Character[]>([]);
+  const [actorsWithMultipleChars, setActorsWithMultipleChars] = useState<
+    ActorsWithMultipleCharactersType[]
+  >([]);
+  const [characters, setCharacters] = useState<
+    CharactersWithMultipleActorsType[]
+  >([]);
   const [moviesPerActor, setMoviesPerActor] = useState<any[]>([]);
   const [movies, setMovies] = useState<any>([]);
+
+  const [actorsPage, setActorsPage] = useState(1);
+  const [charactersPage, setCharactersPage] = useState(1);
+  const [moviesPerActorPage, setMoviesPerActorPage] = useState(1);
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [page, setPage] = useState(1);
 
   const fetchMoviesPerActor = async () => {
     setLoading(true);
     setError(null);
     try {
-      const data = await getMoviesPerActor(page);
+      const data = await getMoviesPerActor(moviesPerActorPage);
       setMoviesPerActor((prev) => [...prev, ...data]);
-      setPage((prev) => prev + 1);
+      setMoviesPerActorPage((prev) => prev + 1);
     } catch (err) {
       setError("Failed to fetch movies for actor");
     } finally {
@@ -40,8 +52,9 @@ export const MarvelProvider: React.FC<{ children: ReactNode }> = ({
     setLoading(true);
     setError(null);
     try {
-      const data = await getActorsWithMultipleCharacters();
-      setActors(data);
+      const data = await getActorsWithMultipleCharacters(actorsPage);
+      setActorsWithMultipleChars(data);
+      setActorsPage((prev) => prev + 1);
     } catch (err) {
       setError("Failed to fetch actors with multiple characters");
     } finally {
@@ -53,8 +66,9 @@ export const MarvelProvider: React.FC<{ children: ReactNode }> = ({
     setLoading(true);
     setError(null);
     try {
-      const data = await getCharactersWithMultipleActors();
+      const data = await getCharactersWithMultipleActors(charactersPage);
       setCharacters(data);
+      setCharactersPage((prev) => prev + 1);
     } catch (err) {
       setError("Failed to fetch characters with multiple actors");
     } finally {
@@ -79,7 +93,7 @@ export const MarvelProvider: React.FC<{ children: ReactNode }> = ({
     <MarvelContext.Provider
       value={{
         movies,
-        actors,
+        actorsWithMultipleChars,
         characters,
         moviesPerActor,
         loading,
