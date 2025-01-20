@@ -67,11 +67,13 @@ interface MovieCardProps {
 
 const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
   const genres = movie.genre_ids.map(getGenreName);
-  const formattedDate = formatDateToText(movie.release_date);
+  const formattedDate = movie.release_date
+    ? formatDateToText(movie.release_date)
+    : "N/A";
   return (
     <CardContainer>
       <CardImage
-        src={`https://image.tmdb.org/t/p/w500${movie.backdrop_path}`}
+        src={`https://image.tmdb.org/t/p/w500${movie?.backdrop_path}`}
         alt={movie.title}
         loading="lazy"
       />
