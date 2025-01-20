@@ -11,7 +11,7 @@ export const navButtons = [
     path: RoutesPaths.ACTORS_WITH_MULTIPLE_CHARACTERS,
   },
   {
-    label: RoutesLabels.ACTORS_WITH_MULTIPLE_CHARACTERS,
+    label: RoutesLabels.MOVIES_PER_ACTOR,
     path: RoutesPaths.MOVIES_PER_ACTOR,
   },
 ];

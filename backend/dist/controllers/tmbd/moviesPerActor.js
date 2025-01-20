@@ -17,26 +17,35 @@ const actors_1 = require("../../utils/actors");
 const MoviesPerActor_1 = __importDefault(require("../../models/MoviesPerActor"));
 const getMoviesPerActor = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const existingData = yield MoviesPerActor_1.default.find();
-        if (existingData && existingData.length > 0) {
-            res.json(existingData);
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 100;
+        const skip = (page - 1) * limit;
+        const moviesPerActorData = yield MoviesPerActor_1.default.find()
+            .skip(skip)
+            .limit(limit);
+        if (moviesPerActorData && moviesPerActorData.length > 0) {
+            const reversedData = moviesPerActorData.reverse();
+            res.json(reversedData);
         }
         else {
-            const moviesPerActorData = yield (0, actors_1.getMoviesPerActorMap)();
-            const newMoviesPerActorData = Object.entries(moviesPerActorData).map(([actorName, movies]) => {
+            const newMoviesPerActorData = yield (0, actors_1.getMoviesPerActorMap)();
+            const selectedMoviesPerActorData = Object.entries(newMoviesPerActorData)
+                .slice(skip, skip + limit)
+                .map(([actorName, movies]) => {
                 return new MoviesPerActor_1.default({
                     actorName,
                     movies,
                 });
             });
+            const reversedSelectedData = selectedMoviesPerActorData.reverse();
             try {
-                yield MoviesPerActor_1.default.insertMany(newMoviesPerActorData);
-                console.log("Inserted movies per actor data into DB.");
+                yield MoviesPerActor_1.default.insertMany(reversedSelectedData);
+                console.log("Inserted new movies per actor data into DB.");
             }
             catch (dbError) {
                 console.error("Error saving movies per actor data:", dbError);
             }
-            res.json(moviesPerActorData);
+            res.json(reversedSelectedData);
         }
     }
     catch (error) {

@@ -4,7 +4,6 @@ import { MovieType } from "../types/api";
 import { formatDateToText } from "../utils/Date";
 import { getGenreName } from "../utils/Genres";
 
-// Define styled components
 const CardContainer = styled.div`
   background-color: #1e1e1e;
   border-radius: 12px;

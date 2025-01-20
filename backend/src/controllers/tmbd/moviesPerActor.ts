@@ -4,30 +4,41 @@ import MoviesPerActorModel from "../../models/MoviesPerActor";
 
 export const getMoviesPerActor = async (req: Request, res: Response) => {
   try {
-    const existingData = await MoviesPerActorModel.find();
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 100;
 
-    if (existingData && existingData.length > 0) {
-      res.json(existingData);
+    const skip = (page - 1) * limit;
+
+    const moviesPerActorData = await MoviesPerActorModel.find()
+      .skip(skip)
+      .limit(limit);
+
+    if (moviesPerActorData && moviesPerActorData.length > 0) {
+
+      const reversedData = moviesPerActorData.reverse();
+      res.json(reversedData);
     } else {
-      const moviesPerActorData = await getMoviesPerActorMap();
+      const newMoviesPerActorData = await getMoviesPerActorMap();
 
-      const newMoviesPerActorData = Object.entries(moviesPerActorData).map(
-        ([actorName, movies]) => {
+      const selectedMoviesPerActorData = Object.entries(newMoviesPerActorData)
+        .slice(skip, skip + limit)
+        .map(([actorName, movies]) => {
           return new MoviesPerActorModel({
             actorName,
             movies,
           });
-        }
-      );
+        });
+
+      const reversedSelectedData = selectedMoviesPerActorData.reverse();
 
       try {
-        await MoviesPerActorModel.insertMany(newMoviesPerActorData);
-        console.log("Inserted movies per actor data into DB.");
+        await MoviesPerActorModel.insertMany(reversedSelectedData);
+        console.log("Inserted new movies per actor data into DB.");
       } catch (dbError) {
         console.error("Error saving movies per actor data:", dbError);
       }
 
-      res.json(moviesPerActorData);
+      res.json(reversedSelectedData);
     }
   } catch (error) {
     console.error("Error fetching movies per actor:", error);

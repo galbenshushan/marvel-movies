@@ -1,4 +1,4 @@
-import { AppBar, Box, Toolbar, Typography } from "@mui/material";
+import { AppBar, Box, Toolbar } from "@mui/material";
 import { styled } from "@mui/system";
 import { useLocation } from "react-router-dom";
 import NavButton from "./ui/navButton";
@@ -7,7 +7,7 @@ import { navButtons } from "../consts/routes";
 const StyledAppBar = styled(AppBar)({
   padding: "0",
   backgroundColor: "#202020",
-boxShadow: "0px 20px 20px rgba(0, 0, 0, 0.3)",
+  boxShadow: "0px 20px 20px rgba(0, 0, 0, 0.3)",
   height: "100px",
   display: "flex",
   justifyContent: "center",
@@ -24,19 +24,21 @@ const StyledToolbar = styled(Toolbar)({
   width: "100%",
 });
 
-const StyledTypography = styled(Typography)({
-  fontWeight: "bold",
-  color: "#FFFFFF",
-  flexGrow: 1,
+const Logo = styled("img")({
+  height: "60px",
+  width: "auto",
+  objectFit: "contain",
 });
 
 const Navbar = () => {
   const location = useLocation();
+
   return (
     <StyledAppBar position="static">
       <StyledBox>
         <StyledToolbar>
-          <StyledTypography variant="h4">MARVEL</StyledTypography>
+          <Logo src="/src/assets/logo.jpg" alt="Marvel Logo" />
+
           <Box
             sx={{
               display: "flex",

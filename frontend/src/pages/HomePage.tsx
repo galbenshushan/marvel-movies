@@ -3,7 +3,6 @@ import { useMarvel } from "../hooks/useMarvel";
 import MovieCard from "../components/MovieCard";
 import styled from "styled-components";
 
-// Styled component for the grid container
 const GridContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
@@ -13,15 +12,14 @@ const GridContainer = styled.div`
   background-color: #121212;
 `;
 
-// Styled component for the banner section
 const Banner = styled.div`
   width: 100%;
-  height: 300px; // Set a height for the banner
+  height: 300px;
   background-image: url("/src/assets/MarvelBanner.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  margin-bottom: 20px; // Add some space between the banner and the grid
+  margin-bottom: 20px;
 `;
 
 const HomePage = () => {
@@ -33,7 +31,7 @@ const HomePage = () => {
 
   return (
     <>
-      <Banner /> {/* Banner section */}
+      <Banner />
       <GridContainer>
         {movies.map((movie) => (
           <MovieCard key={movie.id} movie={movie} />

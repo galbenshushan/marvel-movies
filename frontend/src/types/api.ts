@@ -1,13 +1,14 @@
 export interface MarvelContextType {
   actors: Actor[];
   characters: Character[];
-  moviesPerActor: MoviesPerActorResponse | null;
+  moviesPerActor: any[];
   movies: any[];
   loading: boolean;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   error: string | null;
   fetchActors: () => Promise<void>;
   fetchCharacters: () => Promise<void>;
-  fetchMoviesForActor: (actorId: string) => Promise<void>;
+  fetchMoviesPerActor: () => Promise<void>;
   fetchMovies: () => Promise<void>;
 }
 
@@ -15,6 +16,7 @@ export interface Actor {
   id: string;
   name: string;
 }
+
 
 export interface Character {
   id: string;
@@ -27,11 +29,15 @@ export interface Movie {
   year: number;
 }
 
-export interface MoviesPerActorResponse {
-  actor: Actor;
-  movies: Movie[];
+export interface IMoviesPerActor {
+  _id: string;
+  actorName: string;
+  movies: string[];
 }
 
+export interface MoviesPerActorType {
+  actor: IMoviesPerActor;
+}
 
 export interface MovieType {
   adult: boolean;

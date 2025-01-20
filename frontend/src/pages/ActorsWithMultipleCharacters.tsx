@@ -1,8 +1,14 @@
+import { useEffect } from "react";
+import { useMarvel } from "../hooks/useMarvel";
 
 const ActorsWithMultipleCharacters = () => {
-  return (
-    <div>ActorsWithMultipleCharacters</div>
-  )
-}
+  const { fetchMovies } = useMarvel();
 
-export default ActorsWithMultipleCharacters
+  useEffect(() => {
+    fetchMovies();
+  }, []);
+
+  return <div>ActorsWithMultipleCharacters</div>;
+};
+
+export default ActorsWithMultipleCharacters;
