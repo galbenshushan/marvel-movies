@@ -29,25 +29,24 @@ exports.connectToDatabase = connectToDatabase;
 const insertMoviesToDb = (movies) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const moviePromises = movies.map((movie) => __awaiter(void 0, void 0, void 0, function* () {
-            const existingMovie = yield Movie_1.default.findOne({ id: movie.id });
-            if (!existingMovie) {
-                const newMovie = new Movie_1.default({
+            yield Movie_1.default.updateOne({ id: movie.id }, {
+                $setOnInsert: {
                     id: movie.id,
                     title: movie.title,
-                    overview: movie.overview,
-                    release_date: movie.release_date,
-                    popularity: movie.popularity,
-                    vote_average: movie.vote_average,
-                    vote_count: movie.vote_count,
-                    backdrop_path: movie.backdrop_path,
-                    poster_path: movie.poster_path,
-                    genre_ids: movie.genre_ids,
-                });
-                yield newMovie.save();
-            }
+                    overview: movie.overview || "N/A",
+                    release_date: movie.release_date || "",
+                    popularity: movie.popularity || 0,
+                    vote_average: movie.vote_average || 0,
+                    vote_count: movie.vote_count || 0,
+                    backdrop_path: movie.backdrop_path || "",
+                    poster_path: movie.poster_path || "",
+                    genre_ids: movie.genre_ids || [],
+                },
+            }, { upsert: true } // Insert if not found
+            );
         }));
         yield Promise.all(moviePromises);
-        console.log("Movies inserted to the database");
+        console.log("Movies inserted/updated in the database");
     }
     catch (error) {
         console.error("Error inserting movies into the database:", error);

@@ -24,8 +24,7 @@ const getMoviesPerActor = (req, res) => __awaiter(void 0, void 0, void 0, functi
             .skip(skip)
             .limit(limit);
         if (moviesPerActorData && moviesPerActorData.length > 0) {
-            const reversedData = moviesPerActorData.reverse();
-            res.json(reversedData);
+            res.json(moviesPerActorData);
         }
         else {
             const newMoviesPerActorData = yield (0, actors_1.getMoviesPerActorMap)();
@@ -37,15 +36,14 @@ const getMoviesPerActor = (req, res) => __awaiter(void 0, void 0, void 0, functi
                     movies,
                 });
             });
-            const reversedSelectedData = selectedMoviesPerActorData.reverse();
             try {
-                yield MoviesPerActor_1.default.insertMany(reversedSelectedData);
+                yield MoviesPerActor_1.default.insertMany(selectedMoviesPerActorData);
                 console.log("Inserted new movies per actor data into DB.");
             }
             catch (dbError) {
                 console.error("Error saving movies per actor data:", dbError);
             }
-            res.json(reversedSelectedData);
+            res.json(selectedMoviesPerActorData);
         }
     }
     catch (error) {

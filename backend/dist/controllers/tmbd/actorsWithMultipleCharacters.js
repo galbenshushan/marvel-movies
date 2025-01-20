@@ -17,14 +17,21 @@ const actors_1 = require("../../utils/actors");
 const ActorsWithMultipleCharacters_1 = __importDefault(require("../../models/ActorsWithMultipleCharacters"));
 const getActorsWithMultipleCharacters = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const existingData = yield ActorsWithMultipleCharacters_1.default.find();
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 100;
+        const skip = (page - 1) * limit;
+        const existingData = yield ActorsWithMultipleCharacters_1.default.find()
+            .skip(skip)
+            .limit(limit);
         if (existingData && existingData.length > 0) {
             res.json(existingData);
         }
         else {
             const actorMap = yield (0, actors_1.getActorMap)();
             const filteredActorMap = (0, actors_1.filterActorsWithMultipleCharacters)(actorMap);
-            const newActorsWithMultipleCharactersData = Object.entries(filteredActorMap).map(([actorName, characters]) => {
+            const newActorsWithMultipleCharactersData = Object.entries(filteredActorMap)
+                .slice(skip, skip + limit)
+                .map(([actorName, characters]) => {
                 const formattedCharacters = characters.map((character) => typeof character === "object" && character.characterName
                     ? character.characterName
                     : JSON.stringify(character));
@@ -40,7 +47,7 @@ const getActorsWithMultipleCharacters = (req, res) => __awaiter(void 0, void 0, 
             catch (dbError) {
                 console.error("Error saving actors with multiple characters data:", dbError);
             }
-            res.json(filteredActorMap);
+            res.json(newActorsWithMultipleCharactersData);
         }
     }
     catch (error) {
