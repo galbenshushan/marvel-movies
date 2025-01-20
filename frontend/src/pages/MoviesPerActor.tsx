@@ -3,7 +3,14 @@ import { useMarvel } from "../hooks/useMarvel";
 import LineLoader from "../components/ui/LineLoader";
 import MoviesCollapse from "../components/moviesPerActors/MoviesCollapse";
 import { v4 as uuidv4 } from "uuid";
+import styled from "styled-components";
 
+const Container = styled.div`
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+`;
 const MoviesPerActor = () => {
   const { moviesPerActor, fetchMoviesPerActor, loading, fetchMovies } =
     useMarvel();
@@ -32,13 +39,13 @@ const MoviesPerActor = () => {
   }, [loading]);
 
   return (
-    <div style={{ padding: "20px" }}>
+    <Container>
       <h1>Movies per Actor</h1>
       {moviesPerActor.map((actor) => (
         <MoviesCollapse actor={actor} key={uuidv4()} />
       ))}
       {loading && <LineLoader />}
-    </div>
+    </Container>
   );
 };
 
