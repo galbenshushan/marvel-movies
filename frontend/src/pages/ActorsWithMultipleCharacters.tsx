@@ -3,7 +3,7 @@ import { useMarvel } from "../hooks/useMarvel";
 import ActorAccordion from "../components/ActorAccordion";
 import { Typography } from "@mui/material";
 import styled from "styled-components";
-import useMountEffect from "../hooks/useMountEffect";
+import { useEffect } from "react";
 
 const Container = styled.div`
   padding: 20px;
@@ -22,7 +22,7 @@ const ActorsWithMultipleCharacters = () => {
   const { fetchActors, actorsWithMultipleChars, movies, fetchMovies } =
     useMarvel();
 
-  useMountEffect(() => {
+  useEffect(() => {
     if (movies.length === 0) {
       fetchMovies();
     }

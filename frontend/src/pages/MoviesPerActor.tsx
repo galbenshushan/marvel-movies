@@ -3,7 +3,7 @@ import LineLoader from "../components/ui/LineLoader";
 import MoviesCollapse from "../components/moviesPerActors/MoviesCollapse";
 import { v4 as uuidv4 } from "uuid";
 import styled from "styled-components";
-import useMountEffect from "../hooks/useMountEffect";
+import { useEffect } from "react";
 
 const Container = styled.div`
   padding: 20px;
@@ -15,7 +15,7 @@ const MoviesPerActor = () => {
   const { moviesPerActor, fetchMoviesPerActor, loading, fetchMovies, movies } =
     useMarvel();
 
-  useMountEffect(() => {
+  useEffect(() => {
     if (movies.length === 0) {
       fetchMovies();
     }
@@ -35,7 +35,7 @@ const MoviesPerActor = () => {
     }
   };
 
-  useMountEffect(() => {
+  useEffect(() => {
     window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);

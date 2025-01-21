@@ -3,7 +3,8 @@ import MovieCard from "../components/MovieCard";
 import styled from "styled-components";
 import { MovieType } from "../types/api";
 import { v4 as uuidv4 } from "uuid";
-import useMountEffect from "../hooks/useMountEffect";
+import banner from "../assets/MarvelBanner.jpg";
+import { useEffect } from "react";
 
 const GridContainer = styled.div`
   display: flex;
@@ -17,7 +18,7 @@ const GridContainer = styled.div`
 const Banner = styled.div`
   width: 100%;
   height: 300px;
-  background-image: url("/src/assets/MarvelBanner.jpg");
+  background-image: url(${banner});
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -27,11 +28,12 @@ const Banner = styled.div`
 const HomePage = () => {
   const { fetchMovies, movies } = useMarvel();
 
-  useMountEffect(() => {
+  useEffect(() => {
     if (movies.length === 0) {
       fetchMovies();
     }
-  }, []);
+  }, [movies]);
+
 
   return (
     <>
