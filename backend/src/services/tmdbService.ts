@@ -1,10 +1,7 @@
 import dotenv from "dotenv";
 import { emptyMovieResult } from "../consts/general";
-import { MovieType, MovieResponse, ActorMap } from "../types/general";
+import { MovieType, MovieResponse } from "../types/general";
 dotenv.config();
-
-const API_KEY = process.env.API_KEY;
-const BASE_URL = process.env.BASE_URL;
 
 export const getMovies = async (id: number): Promise<MovieResponse> => {
   let allMovies: MovieType[] = [];
@@ -13,11 +10,11 @@ export const getMovies = async (id: number): Promise<MovieResponse> => {
   try {
     while (currentPage <= totalPages) {
       const response = await fetch(
-        `${BASE_URL}/discover/movie?with_companies=${id}&page=${currentPage}`,
+        `${process.env.BASE_URL}/discover/movie?with_companies=${id}&page=${currentPage}`,
         {
           method: "GET",
           headers: {
-            Authorization: `Bearer ${API_KEY}`,
+            Authorization: `Bearer ${process.env.API_KEY}`,
             "Content-Type": "application/json",
           },
         }
@@ -69,6 +66,3 @@ export const getActorCredits = async (movieId: number): Promise<any[]> => {
     return [];
   }
 };
-
-
-

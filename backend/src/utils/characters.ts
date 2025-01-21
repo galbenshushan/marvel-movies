@@ -60,7 +60,6 @@ export const getCharactersWithMultipleActorsData = async (): Promise<any[]> => {
 
         try {
           await newCharacterData.save();
-          console.log(`Inserted character: ${characterName}`);
         } catch (error) {
           console.error(`Error saving character ${characterName}:`, error);
         }
