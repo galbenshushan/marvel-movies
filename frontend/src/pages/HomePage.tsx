@@ -32,8 +32,7 @@ const HomePage = () => {
     if (movies.length === 0) {
       fetchMovies();
     }
-  }, [movies]);
-
+  }, []);
 
   return (
     <>
