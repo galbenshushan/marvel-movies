@@ -65,7 +65,6 @@ Ensure you have the following installed on your machine:
 
 4. **Access the Application**:
    - Frontend: Open your browser and navigate to `http://localhost:8080`
-   - Backend: API documentation available at `http://localhost:3000/api-docs`
 
 5. **Stop the Application**:
    - To stop the containers:
@@ -73,7 +72,7 @@ Ensure you have the following installed on your machine:
 
 ---
 
-### Base URL
+### Base backend URL
 ```
 http://localhost:3000
 ```
