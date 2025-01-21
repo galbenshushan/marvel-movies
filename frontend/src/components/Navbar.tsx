@@ -1,8 +1,9 @@
 import { AppBar, Box, Toolbar } from "@mui/material";
 import { styled } from "@mui/system";
 import { useLocation } from "react-router-dom";
-import NavButton from "./ui/navButton";
 import { navButtons } from "../consts/routes";
+import NavButton from "./ui/NavButton";
+import logo from "../assets/logo.jpg";
 
 const StyledAppBar = styled(AppBar)({
   padding: "0",
@@ -37,7 +38,7 @@ const Navbar = () => {
     <StyledAppBar position="static">
       <StyledBox>
         <StyledToolbar>
-          <Logo src="/src/assets/logo.jpg" alt="Marvel Logo" />
+          <Logo src={logo} alt="Marvel Logo" />
 
           <Box
             sx={{
