@@ -5,6 +5,8 @@ import { Typography } from "@mui/material";
 import styled from "styled-components";
 import { CharacterEntry, CharactersWithMultipleActorsType } from "../types/api";
 import { useEffect } from "react";
+import LineLoader from "../components/ui/LineLoader";
+import useScroll from "../hooks/useScroll";
 
 const Container = styled.div`
   padding: 20px;
@@ -14,7 +16,8 @@ const Container = styled.div`
 `;
 
 const CharactersWithMultipleActors = () => {
-  const { fetchCharacters, characters, movies, fetchMovies } = useMarvel();
+  const { fetchCharacters, characters, movies, fetchMovies, loading } =
+    useMarvel();
 
   useEffect(() => {
     if (movies.length === 0) {
@@ -24,6 +27,8 @@ const CharactersWithMultipleActors = () => {
       fetchCharacters();
     }
   }, []);
+
+  useScroll({ fetchRequest: fetchCharacters });
 
   return (
     <Container>
@@ -37,6 +42,7 @@ const CharactersWithMultipleActors = () => {
           ))}
         </ActorAccordion>
       ))}
+      {loading && <LineLoader />}
     </Container>
   );
 };

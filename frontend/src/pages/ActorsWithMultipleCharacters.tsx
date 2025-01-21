@@ -4,6 +4,8 @@ import ActorAccordion from "../components/ActorAccordion";
 import { Typography } from "@mui/material";
 import styled from "styled-components";
 import { useEffect } from "react";
+import LineLoader from "../components/ui/LineLoader";
+import useScroll from "../hooks/useScroll";
 
 const Container = styled.div`
   padding: 20px;
@@ -19,7 +21,7 @@ interface ActorsWithMultipleCharactersType {
 }
 
 const ActorsWithMultipleCharacters = () => {
-  const { fetchActors, actorsWithMultipleChars, movies, fetchMovies } =
+  const { fetchActors, actorsWithMultipleChars, movies, fetchMovies, loading } =
     useMarvel();
 
   useEffect(() => {
@@ -30,6 +32,8 @@ const ActorsWithMultipleCharacters = () => {
       fetchActors();
     }
   }, []);
+
+  useScroll({ fetchRequest: fetchActors });
 
   return (
     <Container>
@@ -43,6 +47,7 @@ const ActorsWithMultipleCharacters = () => {
           </ActorAccordion>
         )
       )}
+      {loading && <LineLoader />}
     </Container>
   );
 };
