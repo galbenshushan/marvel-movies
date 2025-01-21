@@ -21,6 +21,8 @@ services:
     environment:
       - FRONTEND_URL=http://localhost:8080
       - DB_URI=mongodb://mongodb:27017/marvel
+      - BASE_URL=https://api.themoviedb.org/3
+      - API_KEY=eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5MjdhMDcxMzk3OThjZGQ1NjA0ZTQyOTcwNzdjMzQzNSIsIm5iZiI6MTczMTMyOTMzOS44NDMyNDMxLCJzdWIiOiI2NzMxZmMwZjBkNzU4MDQwZWI0YjE2MmIiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.e-7ALW2PRpz76PqLzoKP-bsOBeMchAtLx7TW1QOH-so
     depends_on:
       - mongodb
     networks:
