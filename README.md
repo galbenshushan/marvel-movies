@@ -1,5 +1,8 @@
 # Marvel Movies Project
 
+To be honest, I also really like Marvel and had a lot of fun doing the project!
+
+
 ## Project Overview
 The Marvel Movie Data Explorer is a full-stack application designed to analyze and present data related to Marvel movies, actors, and characters using data from the TMDB (The Movie Database) API. 
 
